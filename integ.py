@@ -8,7 +8,7 @@ def extract(fname):
     c = 299792458
     pos = np.zeros(3)
     vel = 0*pos
-    fil = open(fname)
+    fil = open('equator/'+fname)
     #print(fname)
     mread = False
     while True:
@@ -115,8 +115,8 @@ def virial():
         pot -= mass[i]*mass[j]/dr
     print(pot+kin)#,2*kin,pot)
         
-def dot(x,y):
-    return np.sum(x*y)/(np.sum(x*x)*np.sum(y*y))**(1/2)
+def dot(a,b):
+    return np.sum(a*b)/(np.sum(a*a)*np.sum(b*b))**(1/2)
 
 def latlon():
     pi = np.pi
