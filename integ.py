@@ -9,7 +9,7 @@ def extract(fname):
     pos = np.zeros(3)
     vel = 0*pos
     fil = open(fname)
-    print(fname)
+    #print(fname)
     mread = False
     while True:
         lyne = fil.readline()[:-1]
@@ -34,7 +34,7 @@ def extract(fname):
     pos *= 1e3/c
     vel *= 1e3/c
     fil.close()
-    print(M,pos,vel)
+    #print(M,pos,vel)
     return M, pos, vel
     
 
@@ -56,7 +56,7 @@ mass[9],pos[9],vel[9] = extract('neptune.txt')
 '''
 
 
-print()
+#print()
 
 
 cmass = 0
@@ -84,6 +84,7 @@ print()
 pos -= cpos
 vel -= cvel
 
+'''
 for n in range(N):
     if n==0:
         print('%9.6f e-6 s' % (1e6*mass[n]))
@@ -95,7 +96,7 @@ for n in range(N):
         print('%11.6f %11.6f %11.6f s' % (num[0],num[1],num[2]))
         num = (vel[n]-vel[1])*1e6
         print('%11.6f %11.6f %11.6f e-6' % (num[0],num[1],num[2]))
-
+'''
 
 def virial():
     cmass = 0
@@ -172,37 +173,30 @@ for s in range(24*900):
     t.append(s/24)
     d = dot(mrel,srel)
     if d < -0.9998 or d > 0.9998:
-        print('%4i %8.5f' % (round(t[-1]),d))
+        print('JD %i cosine: %8.5f' % (2460000+round(t[-1]),d))
     a.append(d)
     srel /= np.linalg.norm(srel)
     mrel /= np.linalg.norm(mrel)
     ter = (pos[1] - pos[0])/600
     lun = ter + (pos[2] - pos[1])/8
-    srel = ter
-    mrel = lun
     if s==0:
         latlon()
         pl.plot(0,0,0,'o',color='orange',markersize=30)
-        sp, = pl.plot(srel[0],srel[1],srel[2],'o',color='lightblue',markersize=10)
-        mp, = pl.plot(mrel[0],mrel[1],mrel[2],'o',color='silver')
-    sp.set_xdata(srel[0])
-    sp.set_ydata(srel[1])
-    sp.set_3d_properties(srel[2])
-    mp.set_xdata(mrel[0])
-    mp.set_ydata(mrel[1])
-    mp.set_3d_properties(mrel[2])
+        sp, = pl.plot((ter[0],),(ter[1],),(ter[2],),'o',color='lightblue',markersize=10)
+        mp, = pl.plot((lun[0],),(lun[1],),(lun[2],),'o',color='silver')
+    sp.set_xdata((ter[0],))
+    sp.set_ydata((ter[1],))
+    sp.set_3d_properties((ter[2],))
+    mp.set_xdata((lun[0],))
+    mp.set_ydata((lun[1],))
+    mp.set_3d_properties((lun[2],))
     pl.pause(0.01)
 
-
-    
-pl.gca().set_aspect('equal')
-pl.show()
-
+'''
 pl.plot(t,np.arccos(a)*180/np.pi)
 pl.xlabel('JD - 2460000')
 pl.ylabel('Sun-Moon angle in degrees')
 pl.text(44,-6,'solar eclipse')
 pl.text(60,180,'lunar eclipse')
 pl.savefig('eclipses')
-pl.show()
-
+'''
