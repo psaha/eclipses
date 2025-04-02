@@ -19,14 +19,13 @@ def pred(t,c):
         print('maybe lunar',t.iso)
     if c[2] > .9998 and c[1] == max(c):
         print('maybe solar',t.iso)
-    
-t = 0
-day = []
-dot = []
-
-dt = 3600
-for s in range(24*900):
+        
+def drift():
+    global pos
     pos += vel*dt/2
+
+def kick():
+    global pos,vel
     acc = 0*pos
     for i in range(N):
         for j in range(i):
@@ -35,11 +34,21 @@ for s in range(24*900):
             acc[i] -= mass[j]*dr/denom
             acc[j] += mass[i]*dr/denom
     vel += acc*dt
-    pos += vel*dt/2
-    srel = pos[0] - pos[1]
-    mrel = pos[2] - pos[1]
+    
+    
+t = 0
+day = []
+dot = []
+
+dt = 3600
+for s in range(24*900):
+    drift()
+    kick()
+    drift()
     t += dt
     day.append(t/86400)
+    srel = pos[0] - pos[1]
+    mrel = pos[2] - pos[1]
     d = inner(mrel,srel)
     dot.append(d)
     if len(day) > 3:
