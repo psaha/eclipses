@@ -10,7 +10,7 @@ vel = data[:,4:]
 
 N = len(mass)
 
-def dot(x,y):
+def inner(x,y):
     return np.sum(x*y)/(np.sum(x*x)*np.sum(y*y))**(1/2)
 
 def pred(t,c):
@@ -20,9 +20,9 @@ def pred(t,c):
     if c[2] > .9998 and c[1] == max(c):
         print('maybe solar',t.iso)
     
-
-t = []
-a = []
+t = 0
+day = []
+dot = []
 
 dt = 3600
 for s in range(24*900):
@@ -38,15 +38,16 @@ for s in range(24*900):
     pos += vel*dt/2
     srel = pos[0] - pos[1]
     mrel = pos[2] - pos[1]
-    t.append(s/24)
-    d = dot(mrel,srel)
-    a.append(d)
-    if len(a) > 3:
-        pred(t[-2],a[-3:])
+    t += dt
+    day.append(t/86400)
+    d = inner(mrel,srel)
+    dot.append(d)
+    if len(day) > 3:
+        pred(day[-2],day[-3:])
 
-ang = np.arccos(a)*180/np.pi
+ang = np.arccos(dot)*180/np.pi
 
-pl.plot(t,ang)
+pl.plot(day,ang)
 pl.xlabel('JD - 2460000')
 pl.ylabel('Sun-Moon angle in degrees')
 pl.show()
