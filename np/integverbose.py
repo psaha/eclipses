@@ -58,12 +58,29 @@ day = 86400
 yr2026 = 1405 * day
 yr2100 = 28433 * day
 
+out = 2
+
+def checkpoint():
+    global out
+    if out > 1:
+        print('%16.9e %16.9e %16.9e' % (sGM,eGM,mGM))
+        print()
+    if out > 0:
+        print('%16.9e %16.9e %16.9e' % (ex,ey,ez))
+        print('%16.9e %16.9e %16.9e' % (mx,my,mz))
+        print('%16.9e %16.9e %16.9e' % (evx,evy,evz))
+        print('%16.9e %16.9e %16.9e' % (mvx,mvy,mvz))
+        print()
+    out -= 1
+
 while t < yr2026:
     # integration step
+    checkpoint()
     drift(dt)
     kick(dt)
     drift(dt)
     t += dt
+    checkpoint()
     # save and check for eclipses
     mjd.append(t/day)
     d = inner(ex-mx,ey-my,ez-mz,ex,ey,ez)
