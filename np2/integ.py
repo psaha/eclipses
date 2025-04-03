@@ -4,11 +4,11 @@ from astropy.time import Time
 
 data = np.loadtxt('inic.txt')
 
-mass = data[:,0]
-pos = data[:,1:4]
-vel = data[:,4:]
-
-N = len(mass)
+sGM, eGM, mGM = data[:,0]
+epos = data[1,1:4]
+evel = data[1,4:]
+mpos = data[2,1:4]
+mvel = data[2,4:]
 
 def inner(x,y):
     return np.sum(x*y)/(np.sum(x*x)*np.sum(y*y))**(1/2)
@@ -20,21 +20,20 @@ def pred(dy,c):
     if c[2] > .9998 and c[1] == max(c):
         print('maybe solar',date.iso)
         
-def drift():
-    global pos
-    pos[1:] += vel[1:]*dt/2
-
-def kick():
-    global pos,vel
-    acc = 0*pos
-    for i in range(N):
-        for j in range(i):
-            dr = pos[i] - pos[j]
-            denom = np.sum(dr**2)**(3/2)
-            acc[i] -= mass[j]*dr/denom
-            acc[j] += mass[i]*dr/denom
-    vel += acc*dt
+def drift(dt):
+    global epos,mpos
+    epos += evel * dt/2
+    mpos += mvel * dt/2
     
+def accel(GM,dis):
+    return -GM * dis/np.sum(dis**2)**(3/2)
+
+def kick(dt):
+    global epos,mpos,evel,mvel
+    evel += accel(sGM,epos) * dt
+    evel += accel(mGM,epos-mpos) * dt
+    mvel += accel(sGM,mpos) * dt
+    mvel += accel(eGM,mpos-epos) * dt
     
 t = 0
 mjd = []
@@ -44,14 +43,12 @@ dt = 3600
 day = 86400
 
 while t < day*1300:
-    drift()
-    kick()
-    drift()
+    drift(dt)
+    kick(dt)
+    drift(dt)
     t += dt
     mjd.append(t/day)
-    srel = pos[0] - pos[1]
-    mrel = pos[2] - pos[1]
-    d = inner(mrel,srel)
+    d = inner(epos-mpos,epos)
     dot.append(d)
     if len(mjd) > 3:
         pred(mjd[-2],dot[-3:])
