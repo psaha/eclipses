@@ -52,7 +52,7 @@ t = 0
 mjd = []
 dot = []
 
-dt = 1200
+dt = 3600
 day = 86400
 
 yr2026 = 1405 * day
@@ -63,12 +63,19 @@ out = 2
 def checkpoint():
     global out
     if out > 1:
+        print(' Sonne_GM         Erde_GM          Mond_GM          m^3 / s^2')
         print('%16.9e %16.9e %16.9e' % (sGM,eGM,mGM))
         print()
     if out > 0:
+        date = Time(2460000+(2-out)*dt/86400,format='jd')
+        print(date.iso)
+        print(' Erde_x           Erde_y           Erde_z           m')        
         print('%16.9e %16.9e %16.9e' % (ex,ey,ez))
+        print(' Mond_x           Mond_y           Mond_z           m') 
         print('%16.9e %16.9e %16.9e' % (mx,my,mz))
+        print(' Erde_vx          Erde_vy          Erde_vz          m / s')
         print('%16.9e %16.9e %16.9e' % (evx,evy,evz))
+        print(' Mond_vx          Mond_vy          Mond_vz          m / s') 
         print('%16.9e %16.9e %16.9e' % (mvx,mvy,mvz))
         print()
     out -= 1
