@@ -1,15 +1,13 @@
-import numpy as np
 import math
 import matplotlib.pyplot as pl
 from astropy.time import Time
 
-data = np.loadtxt('inic.txt')
-
-sGM, eGM, mGM = data[:,0]
-ex,ey,ez = data[1,1:4]
-mx,my,mz = data[2,1:4]
-evx,evy,evz = data[1,4:]
-mvx,mvy,mvz = data[2,4:]
+with open('inic.txt','r') as fil:
+    def getf():
+        return [float(s) for s in fil.readline().split()]
+    sGM = getf()[0]
+    eGM, ex,ey,ez,evx,evy,evz = getf()
+    mGM, mx,my,mz,mvx,mvy,mvz = getf()
 
 
 def inner(ax,ay,az,bx,by,bz):
@@ -73,7 +71,7 @@ while t < yr2026:
     if len(mjd) > 3:
         pred(mjd[-2],dot[-3:])
     
-ang = [math.acos(x)*180/np.pi for x in dot]
+ang = [math.acos(x)*180/math.pi for x in dot]
 
 pl.plot(mjd,ang)
 pl.xlabel('JD - 2460000')
