@@ -13,12 +13,12 @@ N = len(mass)
 def inner(x,y):
     return np.sum(x*y)/(np.sum(x*x)*np.sum(y*y))**(1/2)
 
-def pred(t,c):
-    t = Time(t+2460000,format='jd')
+def pred(dy,c):
+    date = Time(dy+2460000,format='jd')
     if c[1] < -.9998 and c[1] == min(c):
-        print('maybe lunar',t.iso)
+        print('maybe lunar',date.iso)
     if c[2] > .9998 and c[1] == max(c):
-        print('maybe solar',t.iso)
+        print('maybe solar',date.iso)
         
 def drift():
     global pos
@@ -37,26 +37,29 @@ def kick():
     
     
 t = 0
-day = []
+mjd = []
 dot = []
 
 dt = 3600
-for s in range(24*900):
+day = 86400
+
+while t < day*1300:
+#for s in range(24*900):
     drift()
     kick()
     drift()
     t += dt
-    day.append(t/86400)
+    mjd.append(t/day)
     srel = pos[0] - pos[1]
     mrel = pos[2] - pos[1]
     d = inner(mrel,srel)
     dot.append(d)
-    if len(day) > 3:
-        pred(day[-2],day[-3:])
+    if len(mjd) > 3:
+        pred(mjd[-2],dot[-3:])
 
 ang = np.arccos(dot)*180/np.pi
 
-pl.plot(day,ang)
+pl.plot(mjd,ang)
 pl.xlabel('JD - 2460000')
 pl.ylabel('Sun-Moon angle in degrees')
 pl.show()
