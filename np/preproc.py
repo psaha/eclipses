@@ -2,6 +2,7 @@ import numpy as np
 
 def extract(fname):
     c = 299792458
+    c = 1
     pos = np.zeros(3)
     vel = 0*pos
     fil = open(fname)
@@ -35,9 +36,9 @@ N = 3
 mass = np.zeros(N)
 pos = np.zeros(shape=(N,3))
 vel = 0*pos
-mass[0],pos[0],vel[0] = extract('../equator/sol.txt')
-mass[1],pos[1],vel[1] = extract('../equator/earth.txt')
-mass[2],pos[2],vel[2] = extract('../equator/luna.txt')
+mass[0],pos[0],vel[0] = extract('../ecliptic/sol.txt')
+mass[1],pos[1],vel[1] = extract('../ecliptic/earth.txt')
+mass[2],pos[2],vel[2] = extract('../ecliptic/luna.txt')
 '''
 mass[3],pos[3],vel[3] = extract('mercury.txt')
 mass[4],pos[4],vel[4] = extract('venus.txt')
@@ -58,13 +59,18 @@ for n in range(N):
 cpos /= cmass
 cvel /= cmass
 
+'''
 pos -= cpos
 vel -= cvel
+'''
+
+pos -= pos[0]
+vel -= vel[0]
 
 data = np.zeros(shape=(N,7))
 data[:,0] = mass
 data[:,1:4] = pos
 data[:,4:] = vel
 
-np.savetxt('inic.txt',data)
+np.savetxt('inic.txt',data,fmt='%16.8e')
 

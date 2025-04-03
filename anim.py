@@ -8,7 +8,7 @@ def extract(fname):
     c = 299792458
     pos = np.zeros(3)
     vel = 0*pos
-    fil = open('equator/'+fname)
+    fil = open('ecliptic/'+fname)
     #print(fname)
     mread = False
     while True:
