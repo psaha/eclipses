@@ -2,6 +2,8 @@ import math
 import matplotlib.pyplot as pl
 from astropy.time import Time
 
+oem = False
+
 with open('inic.txt','r') as fil:
     def getf():
         return [float(s) for s in fil.readline().split()]
@@ -42,11 +44,13 @@ def kick(dt):
     ax, ay, az = accel(sGM,ex,ey,ez)
     evx, evy, evz = evx+ax*dt, evy+ay*dt, evz+az*dt
     ax, ay, az = accel(mGM,ex-mx,ey-my,ez-mz)
-    evx, evy, evz = evx+ax*dt, evy+ay*dt, evz+az*dt
+    if not oem:
+        evx, evy, evz = evx+ax*dt, evy+ay*dt, evz+az*dt
     ax, ay, az = accel(sGM,mx,my,mz)
     mvx, mvy, mvz = mvx+ax*dt, mvy+ay*dt, mvz+az*dt
     ax, ay, az = accel(eGM,mx-ex,my-ey,mz-ez)
-    mvx, mvy, mvz = mvx+ax*dt, mvy+ay*dt, mvz+az*dt
+    if not oem:
+        mvx, mvy, mvz = mvx+ax*dt, mvy+ay*dt, mvz+az*dt
     
 t = 0
 mjd = []
@@ -67,6 +71,8 @@ def checkpoint():
         print('%16.9e %16.9e %16.9e' % (sGM,eGM,mGM))
         print()
     if out > 0:
+        if oem:
+            print('Test: Ohne Erde-Mond Kraft')
         date = Time(2460000+(2-out)*dt/86400,format='jd')
         print(date.iso)
         print(' Erde_x           Erde_y           Erde_z           m')        
