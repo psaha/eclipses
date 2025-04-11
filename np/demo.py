@@ -20,9 +20,11 @@ def inner(ax,ay,az,bx,by,bz):
 def pred(dy,c):
     date = Time(dy+2460000,format='jd')
     if c[1] < -.9998 and c[1] == min(c):
-        print('maybe lunar',date.iso)
+        print('maybe lunar',date.iso,' Julian date %.2f' % (dy+2460000))
     if c[2] > .9998 and c[1] == max(c):
-        print('maybe solar',date.iso)
+        print('maybe solar',date.iso,' Julian date %.2f' % (dy+2460000))
+        
+        
         
 def drift(dt):
     global ex,ey,ez,mx,my,mz,evx,evy,evz,mvx,mvy,mvz
