@@ -4,15 +4,6 @@ from astropy.time import Time
 
 oem = False
 
-'''
-with open('inic.txt','r') as fil:
-    def getf():
-        return [float(s) for s in fil.readline().split()]
-    sGM = getf()[0]
-    eGM, ex,ey,ez,evx,evy,evz = getf()
-    mGM, mx,my,mz,mvx,mvy,mvz = getf()
-'''
-    
 sGM, eGM, mGM = 1.327124400e+20,  3.986004350e+14,  4.902800070e+12
 ex,ey,ez = -1.344847290e+11,  6.189060650e+10, -2.459272850e+06
 mx,my,mz = -1.341622790e+11,  6.208933150e+10, -4.759447620e+06
@@ -69,30 +60,6 @@ day = 86400
 yr2026 = 1405 * day
 yr2100 = 28433 * day
 
-out = 2
-
-def checkpoint():
-    global out
-    if out > 1:
-        print(' Sonne_GM         Erde_GM          Mond_GM          m^3 / s^2')
-        print('%16.9e %16.9e %16.9e' % (sGM,eGM,mGM))
-        print()
-    if out > 0:
-        if oem:
-            print('Test: Ohne Erde-Mond Kraft')
-        date = Time(2460000+(2-out)*dt/86400,format='jd')
-        print(date.iso)
-        print(' Erde_x           Erde_y           Erde_z           m')        
-        print('%16.9e %16.9e %16.9e' % (ex,ey,ez))
-        print(' Mond_x           Mond_y           Mond_z           m') 
-        print('%16.9e %16.9e %16.9e' % (mx,my,mz))
-        print(' Erde_vx          Erde_vy          Erde_vz          m / s')
-        print('%16.9e %16.9e %16.9e' % (evx,evy,evz))
-        print(' Mond_vx          Mond_vy          Mond_vz          m / s') 
-        print('%16.9e %16.9e %16.9e' % (mvx,mvy,mvz))
-        print()
-    out -= 1
-
 while t < yr2026:
     # integration step
     drift(dt)
@@ -105,6 +72,7 @@ while t < yr2026:
     dot.append(d)
     if len(mjd) > 3:
         pred(mjd[-2],dot[-3:])
+
     
 ang = [math.acos(x)*180/math.pi for x in dot]
 
